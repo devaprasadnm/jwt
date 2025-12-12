@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ievolve.jwt.model.UserInfo;
@@ -27,7 +28,8 @@ public class UserInfoUserDetails implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(userInfo.getRoles());
     }
 
     @Override

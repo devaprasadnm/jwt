@@ -11,6 +11,7 @@ import com.ievolve.jwt.repository.UserInfoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UserInfoUserDetailsService implements UserDetailsService {
@@ -21,11 +22,12 @@ public class UserInfoUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserInfo user = userInfoRepository.findByUsername(username).get();
-
+        Optional<UserInfo> user = userInfoRepository.findByUsername(username);
+        if(user.isEmpty()){
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
         
-        return User.withUsername(user.getUsername())
-                .password(user.getPassword()).authorities(Collections.emptyList()).build();
+        return new UserInfoUserDetails(user.get());
 
 //        return org.springframework.security.core.userdetails.User
 //                .withUsername(user.getUsername())
